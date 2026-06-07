@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Tryout 50 Soal Sejarah Nusantara</title>
+    <style>
+        :root {
+            --bg-body: #1e272e;
+            --bg-card: #2f3640;
+            --text-main: #f5f6fa;
+            --text-muted: #dcdde1;
+            --accent: #e17055;
+            --accent-hover: #ch8573;
+            --success: #2ed573;
+            --danger: #ff4757;
+            --border: #485460;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .wrapper {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 750px;
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 13px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.2);
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .bar-container {
+            flex-grow: 1;
+            height: 8px;
+            background: #485460;
+            border-radius: 4px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-box h2 {
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opt-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.15);
+            border-color: var(--accent);
+        }
+
+        .opt-btn.correct-ans {
+            background-color: rgba(46, 213, 115, 0.2) !important;
+            border-color: var(--success) !important;
+            color: var(--success);
+        }
+
+        .opt-btn.wrong-ans {
+            background-color: rgba(255, 71, 87, 0.2) !important;
+            border-color: var(--danger) !important;
+            color: var(--danger);
+        }
+
+        .alert-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .alert-box.correct-ui {
+            background: rgba(46, 213, 115, 0.1);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-box.wrong-ui {
+            background: rgba(255, 71, 87, 0.1);
+            border-left: 4px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .action-area {
+            margin-top: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: none;
+            font-weight: bold;
+        }
+
+        .action-btn:hover {
+            background: #ff7675;
+        }
+
+        .score-board {
+            text-align: center;
+            display: none;
+        }
+
+        .score-num {
+            font-size: 58px;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 15px 0;
+        }
+
+        .eval-msg {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: var(--text-muted);
+        }
+
+        .retry-btn {
+            background: #0abde3;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <header>
+        <h1>UJIAN UNTUKKK TINAAAA</h1>
+        <p>50 Pertanyaan harus di jawab bujur bujurr okeeee</p>
+    </header>
+
+    <div id="quiz-ui">
+        <div class="status-container">
+            <span id="label-quest">Soal 1/50</span>
+            <div class="bar-container">
+                <div class="bar-fill" id="bar-status"></div>
+            </div>
+            <span id="label-score">Skor: 0</span>
+        </div>
+
+        <div class="quiz-box">
+            <h2 id="quest-text">Memuat daftar pertanyaan marathon...</h2>
+            <div class="options-grid" id="box-options"></div>
+        </div>
+
+        <div class="alert-box" id="box-alert"></div>
+
+        <div class="action-area">
+            <button class="action-btn" id="btn-next" onclick="moveNext()"> Lanjut sayang&rarr;</button>
+        </div>
+    </div>
+
+    <div id="score-ui" class="score-board">
+        <h2>selesaiiiii selamattttttt</h2>
+        <div class="score-num" id="total-score">0</div>
+        <p class="eval-msg" id="msg-eval"></p>
+        <button class="retry-btn" onclick="restartQuiz()">Ulangi Ujian Dari Awal 🔄</button>
+    </div>
+</div>
+
+<script>
+    // Data 50 Soal yang diekstrak sepenuhnya dari lampiran gambar teks cetak Anda.
+    const database = [
+        // Bagian 1: Pengantar Ilmu Sejarah & Metodologi
+        {
+            q: "Kata 'Sejarah' secara etimologis berakar dari bahasa Arab, yaitu...",
+            options: ["Silsilah", "Syajaratun", "Tarikh", "Hikayat"], correct: 1,
+            txt: "Berasal dari bahasa Arab yaitu syajaratun."
+        },
+        {
+            q: "Arti harfiah dari kata dasar bahasa Arab 'Syajaratun' adalah...",
+            options: ["Ranting pohon", "Pohon kayu", "Akar rumput", "Hutan rimba"], correct: 1,
+            txt: "Syajaratun yang berarti pohon kayu."
+        },
+        {
+            q: "Pertumbuhan peradaban manusia dari akar hingga ke cabang dan ranting dilambangkan secara...",
+            options: ["Metaforis", "Hiperbolis", "Kronologis", "Anakronis"], correct: 0,
+            txt: "Secara metaforis melambangkan pertumbuhan peradaban manusia."
+        },
+        {
+            q: "Tujuan utama dari dibentuknya Guna Ilmu Sejarah adalah untuk memahami...",
+            options: ["Masa depan dunia modern", "Perilaku, tradisi, dan nilai manusia masa lalu", "Keadaan ekonomi instan", "Teknologi zaman purba"], correct: 1,
+            txt: "Guna Ilmu Sejarah: Bertujuan untuk memahami perilaku, tradisi, dan nilai manusia masa lalu."
+        },
+        {
+            q: "Pernyataan yang BENAR mengenai guna sejarah terhadap masalah modern adalah...",
+            options: ["Sejarah dapat menyelesaikan masalah modern secara instan", "Sejarah bukan untuk memahami langsung bentuk masalah modern saat ini secara instan", "Sejarah tidak punya hubungan dengan masalah modern", "Sejarah hanya berfokus pada masalah modern"], correct: 1,
+            txt: "Sejarah bukan untuk memahami langsung bentuk masalah modern saat ini secara instan."
+        },
+        {
+            q: "Ciri sejarah sebagai ilmu salah satunya adalah memiliki penafsiran yang dapat dibuktikan, atau disebut...",
+            options: ["Subjektif", "Objektif", "Spekulatif", "Fiktif"], correct: 1,
+            txt: "Ciri Sejarah sebagai Ilmu: Memiliki penafsiran objektif (bisa dibuktikan)."
+        },
+        {
+            q: "Selain penafsiran objektif, syarat sejarah sebagai ilmu harus mengkaji peristiwa...",
+            options: ["Masa lampau", "Masa kini", "Masa depan", "Khayalan"], correct: 0,
+            txt: "Mengkaji peristiwa masa lampau."
+        },
+        {
+            q: "Kajian ilmu sejarah sebagai ilmu harus didasarkan atas kejadian yang...",
+            options: ["Direncanakan di masa depan", "Benar-benar terjadi", "Mitos masyarakat", "Buku fiksi ilmiah"], correct: 1,
+            txt: "Didasarkan atas kejadian yang benar-benar terjadi."
+        },
+        {
+            q: "Konsep dalam ilmu sejarah yang berbicara khusus tentang 'kapan' peristiwa itu terjadi disebut...",
+            options: ["Ruang", "Waktu", "Dimensi", "Lokasi"], correct: 1,
+            txt: "Waktu: Berbicara tentang kapan peristiwa itu terjadi."
+        },
+        {
+            q: "Konsep dalam ilmu sejarah yang berbicara khusus mengenai 'geografis atau di mana lokasi tempat peristiwa berlangsung' disebut...",
+            options: ["Waktu", "Ruang", "Kronologi", "Silsilah"], correct: 1,
+            txt: "Ruang: Berbicara mengenai geografis atau di mana lokasi tempat peristiwa berlangsung."
+        },
+        {
+            q: "Penelitian Sejarah didefinisikan sebagai aktivitas yang dilakukan secara...",
+            options: ["Instan dan cepat", "Sistematis khusus", "Subjektif personal", "Acak tanpa metode"], correct: 1,
+            txt: "Penelitian Sejarah: Dilakukan secara sistematis khusus."
+        },
+        {
+            q: "Tujuan utama diadakannya penelitian sejarah yang sistematis adalah untuk...",
+            options: ["Merubah kejadian masa lalu", "Menggambarkan dan menjelaskan peristiwa yang terjadi di masa lalu", "Mencari keuntungan ekonomi materi", "Membuat cerita fiktif"], correct: 1,
+            txt: "Khusus untuk menggambarkan dan menjelaskan peristiwa yang terjadi di masa lalu."
+        },
+        {
+            q: "Metode Penelitian Sejarah secara berurutan meliputi komponen-komponen berikut, KECUALI...",
+            options: ["Heuristik dan Kritik", "Interpretasi", "Historiografi", "Fenomenologi"], correct: 3,
+            txt: "Metode Penelitian Sejarah: Meliputi Heuristik, Kritik, Interpretasi, dan Historiografi. Fenomenologi tidak termasuk."
+        },
+        {
+            q: "Mengapa Fenomenologi tidak termasuk ke dalam jajaran metode penelitian sejarah?",
+            options: ["Karena terlalu modern", "Karena merupakan metode penelitian pengalaman subjektif", "Karena tidak memakai tulisan", "Karena dikhususkan untuk masa depan"], correct: 1,
+            txt: "Fenomenologi tidak termasuk karena merupakan metode penelitian pengalaman subjektif."
+        },
+        {
+            q: "Tahapan mencari dan mengumpulkan sumber dalam penelitian sejarah dikenal dengan nama...",
+            options: ["Kritik", "Interpretasi", "Heuristik", "Historiografi"], correct: 2,
+            txt: "Heuristik: Tahapan mencari dan mengumpulkan sumber."
+        },
+        {
+            q: "Aktivitas mengunjungi museum, mempelajari arsip kuno, dan mewawancarai pelaku sejarah merupakan contoh aplikasi dari...",
+            options: ["Historiografi", "Kritik Intern", "Heuristik", "Interpretasi"], correct: 2,
+            txt: "Heuristik: contohnya seperti mengunjungi museum, mempelajari arsip kuno, dan mewawancarai pelaku sejarah."
+        },
+        {
+            q: "Bukti sejarah yang didapat langsung dari kesaksian atau keterangan dari pelaku sejarah yang terlibat disebut...",
+            options: ["Sumber Sekunder", "Sumber Primer", "Sumber Tambahan", "Sumber Tersier"], correct: 1,
+            txt: "Sumber Primer: Bukti sejarah yang didapat langsung dari kesaksian atau keterangan dari pelaku sejarah yang terlibat."
+        },
+        {
+            q: "Derajat informasi sekunder berupa tulisan ahli atau rangkuman penelitian (bukan dari saksi/pelaku langsung) dinamakan...",
+            options: ["Sumber Utama", "Sumber Sekunder", "Sumber Inti", "Sumber Lisan"], correct: 1,
+            txt: "Sumber Sekunder: Derajat informasi sekunder berupa tulisan ahli atau rangkuman penelitian (bukan dari saksi/pelaku langsung)."
+        },
+        {
+            q: "Karya sejarah seperti babad, suluk, dan hikayat yang ditulis oleh pujangga kerajaan diklasifikasikan ke dalam...",
+            options: ["Historiografi Tradisional", "Historiografi Kolonial", "Historiografi Modern", "Historiografi Nasional"], correct: 0,
+            txt: "Historiografi Tradisional: Karya seperti babad, suluk, dan hikayat yang ditulis oleh pujangga kerajaan."
+        },
+        {
+            q: "Ciri dominan dari Historiografi Tradisional yang berpusat pada urusan kerajaan dinamakan...",
+            options: ["Eropasentris", "Istanasentris", "Sosiosentris", "Regiosentris"], correct: 1,
+            txt: "Cirinya adalah istanasentris (berpusat pada kerajaan)."
+        },
+        {
+            q: "Penulisan historiografi tradisional sangat kuat dipengaruhi oleh faktor...",
+            options: ["Muatan ekonomi VOC", "Muatan psikologis sang Raja", "Metode ilmiah modern", "Pandangan objektif barat"], correct: 1,
+            txt: "Sangat dipengaruhi oleh muatan psikologis sang Raja."
+        },
+        {
+            q: "Historiografi Kolonial adalah penulisan sejarah yang ditulis dari sudut pandang...",
+            options: ["Pujangga kerajaan lokal", "Bangsa penjajah (Belanda)", "Masyarakat pesisir Nusantara", "Para pedagang kasta Waisya"], correct: 1,
+            txt: "Historiografi Kolonial: Ditulis dari sudut pandang bangsa penjajah (Belanda)."
+        },
+        {
+            q: "Hal yang sangat menonjol ditunjukkan dalam muatan isi Historiografi Kolonial adalah...",
+            options: ["Peran kompeni serta aspek politik-ekonomi mereka", "Silsilah keagamaan para raja", "Kehidupan sosial agraris pedalaman", "Ritual Vratyastoma kepala suku"], correct: 0,
+            txt: "Sehingga sangat menonjolkan peran kompeni serta aspek politik-ekonomi mereka."
+        },
+        {
+            q: "Konsep yang mempelajari hal-hal yang tetap konsisten, bertahan lama, dan berjalan terus-menerus tanpa adanya pergeseran drastis disebut...",
+            options: ["Konsep Perubahan", "Konsep Keberlanjutan", "Konsep Ruang", "Konsep Heuristik"], correct: 1,
+            txt: "Konsep Perubahan & Keberlanjutan: Konsep yang mempelajari hal-hal yang tetap konsisten, bertahan lama, dan berjalan terus-menerus tanpa adanya pergeseran drastis disebut Keberlanjutan."
+        },
+
+        // Bagian 2: Masa Hindu-Buddha di Nusantara
+        {
+            q: "Hasil bumi asli Nusantara yang menjadi primadona luar biasa dan memicu jalur perdagangan global sejak sebelum masehi adalah...",
+            options: ["Lada dan kopi", "Cengkih dan pala", "Kapas dan beras", "Sutra dan teh"], correct: 1,
+            txt: "Jalur Perdagangan Maritim: Hasil bumi asli Nusantara yang menjadi primadona luar biasa dan memicu jalur perdagangan global sejak sebelum masehi adalah cengkih dan pala."
+        },
+        {
+            q: "Ahli geografi Yunani kuno mencatat wilayah kepulauan penghasil wewangian (kapur barus) di Nusantara dengan nama...",
+            options: ["Nalanda", "Barousai", "Kambay", "Barus"], correct: 1,
+            txt: "Istilah Geografi Kuno: Ahli geografi Yunani kuno mencatat wilayah kepulauan penghasil wewangian (kapur barus) di Nusantara dengan nama Barousai."
+        },
+        {
+            q: "Sistem Kepercayaan Kuno yang fokus memuja roh leluhur yang mendiami benda/alam disebut...",
+            options: ["Dinamisme", "Animisme", "Hinduisme", "Buddhisme"], correct: 1,
+            txt: "Sistem Kepercayaan Kuno: Membedakan Animisme (fokus memuja roh leluhur yang mendiami benda/alam)..."
+        },
+        {
+            q: "Sistem Kepercayaan Kuno yang memuja adanya kekuatan gaib/mistis pada benda tertentu disebut...",
+            options: ["Animisme", "Dinamisme", "Politeisme", "Monoteisme"], correct: 1,
+            txt: "...dan Dinamisme (memuja adanya kekuatan gaib/mistis pada benda tertentu)."
+        },
+        {
+            q: "Tingginya aktivitas pelayaran internasional menyebabkan tumbuhnya masyarakat yang plural (majemuk) di daerah...",
+            options: ["Pedalaman pegunungan", "Pesisir pantai", "Pusat agraris", "Hutan belantara"], correct: 1,
+            txt: "Dampak Sosial Perdagangan: Tingginya aktivitas pelayaran internasional menyebabkan tumbuhnya masyarakat yang majemuk (plural) akibat interaksi pedagang lintas negara di daerah pesisir."
+        },
+        {
+            q: "Kebutuhan mengelola keamanan pelabuhan dagang kuno memicu lahirnya...",
+            options: ["Perjanjian Giyanti", "Kerajaan-kerajaan pesisir pertama di Nusantara", "Sistem kasta Sudra", "Tradisi sekaten"], correct: 1,
+            txt: "Evolusi Politik: Kebutuhan mengelola keamanan pelabuhan dagang kuno memicu lahirnya kerajaan-kerajaan pesisir pertama di Nusantara."
+        },
+        {
+            q: "Teori yang menyatakan bahwa pendeta datang ke Nusantara atas undangan penguasa lokal untuk memimpin upacara adalah...",
+            options: ["Teori Ksatria", "Teori Brahmana", "Teori Waisya", "Teori Sudra"], correct: 1,
+            txt: "Teori Brahmana: Pendeta datang atas undangan penguasa lokal untuk memimpin upacara."
+        },
+        {
+            q: "Teori Ksatria menjelaskan masuknya Hindu-Buddha dibawa oleh prajurit/bangsawan yang...",
+            options: ["Berdagang keliling dunia", "Kalah perang melarikan diri dan membangun koloni", "Melakukan ziarah keagamaan", "Mencari pekerjaan kasar"], correct: 1,
+            txt: "Teori Ksatria: Prajurit/bangsawan yang kalah perang melarikan diri dan membangun koloni."
+        },
+        {
+            q: "Teori Waisya menekankan peran aktif dari kasta...",
+            options: ["Pendeta India", "Pedagang India yang menetap dan menikah", "Bangsawan perang", "Pekerja rendahan"], correct: 1,
+            txt: "Teori Waisya: Peran aktif pedagang India yang menetap dan menikah dengan warga lokal."
+        },
+        {
+            q: "Dampak sosiologis dari Teori Waisya adalah berorientasi pada...",
+            options: ["Peperangan bersenjata", "Akulturasi budaya secara bertahap", "Penghapusan kasta lokal", "Isolasi wilayah pedalaman"], correct: 1,
+            txt: "Dampak sosiologisnya berorientasi pada akulturasi budaya secara bertahap."
+        },
+        {
+            q: "Teori Sudra mengemukakan bahwa masuknya Hindu-Buddha dibawa oleh migrasi kasta terendah untuk...",
+            options: ["Memimpin upacara sakral", "Mencari penghidupan", "Menyebarkan kitab Weda", "Membangun koloni militer"], correct: 1,
+            txt: "Teori Sudra: Migrasi kasta terendah untuk mencari penghidupan."
+        },
+        {
+            q: "Teori Arus Balik menekankan peran aktif dari pemuda/penduduk Nusantara yang...",
+            options: ["Diasingkan ke luar wilayah", "Mandiri belajar agama langsung ke India (Nalanda) lalu pulang untuk menyebarkannya", "Dipaksa mengikuti kasta Waisya", "Menjadi prajurit bayaran koloni"], correct: 1,
+            txt: "Teori Arus Balik: Menekankan peran aktif pemuda/penduduk Nusantara yang mandiri belajar agama langsung ke India (Nalanda) lalu pulang untuk menyebarkannya."
+        },
+        {
+            q: "Upacara penyucian kasta masyarakat suku kuno untuk menaikkan kasta menjadi ksatria (misalnya bagi kepala suku) dinamakan...",
+            options: ["Sekaten", "Vratyastoma", "Tabot", "Giyanti"], correct: 1,
+            txt: "Ritual Keagamaan Hindu: Vratyastoma: Upacara penyucian kasta masyarakat suku kuno untuk menaikkan kasta menjadi ksatria (misalnya bagi kepala suku)."
+        },
+        {
+            q: "Bahasa kuno tingkat tinggi yang dikuasai kasta Brahmana untuk penulisan kitab suci Weda adalah...",
+            options: ["Melayu Kuno", "Sanskerta", "Jawa Kuno", "Pallawa"], correct: 1,
+            txt: "Bahasa Kuno: Bahasa kuno tingkat tinggi yang dikuasai kasta Brahmana untuk penulisan kitab suci Weda adalah Sanskerta."
+        },
+        {
+            q: "Pada masa Hindu-Buddha, legitimasi kekuasaan memandang Raja sebagai...",
+            options: ["Manusia biasa utusan Tuhan", "Titisan/inkarnasi dewa di bumi", "Kepala suku demokratis", "Gubernur jenderal kompeni"], correct: 1,
+            txt: "Legitimasi Kekuasaan Konsep Dewa Raja: Pada masa Hindu-Buddha, Raja dipandang sebagai titisan/inkarnasi dewa di bumi (bersifat sakral, mutlak, dan absolut)."
+        },
+
+        // Bagian 3: Masa Perkembangan dan Kerajaan Islam
+        {
+            q: "Proses Islamisasi di Nusantara diawali secara bertahap sejak abad ke-7 dari adanya hubungan...",
+            options: ["Ekspedisi militer resmi", "Individu pedagang", "Perjanjian Giyanti", "Akulturasi Vratyastoma"], correct: 1,
+            txt: "Proses Islamisasi: Islam masuk secara bertahap, diawali dari hubungan individu pedagang (sejak abad ke-7)."
+        },
+        {
+            q: "Setelah hubungan individu pedagang, tahap Islamisasi berikutnya ditandai dengan munculnya...",
+            options: ["Perjanjian Bongaya", "Pemukiman/makam (abad ke-11), lalu berdiri kesultanan (abad ke-13)", "Historiografi Kolonial", "Jalur transit Maluku"], correct: 1,
+            txt: "...lalu muncul pemukiman/makam (abad ke-11), hingga akhirnya berdiri kesultanan (abad ke-13)."
+        },
+        {
+            q: "Lokasi permukiman muslim tertua abad ke-7 di Sumatra Utara berada di bandar pantai barat Sumatra, yaitu...",
+            options: ["Perlak", "Barus", "Samudera Pasai", "Pasai"], correct: 1,
+            txt: "Lokasi permukiman muslim tertua abad ke-7 di Sumatra Utara berada di bandar pantai barat Sumatra, yaitu Barus."
+        },
+        {
+            q: "Teori Gujarat menyatakan Islam berasal dari India (abad ke-13) dengan bukti arkeologis kemiripan nisan Sultan Malik as-Saleh (Aceh) dan Maulana Malik Ibrahim (Gresik) dengan nisan di...",
+            options: ["Nalanda", "Kambay, Gujarat", "Kanton", "Barousai"], correct: 1,
+            txt: "Teori Gujarat: ...Bukti arkeologisnya berupa kemiripan bentuk batu nisan... dengan nisan di Kambay, Gujarat."
+        },
+        {
+            q: "Bukti pendukung Jalur Teori Persia adalah adanya kesamaan budaya berkabung atas wafatnya cucu Nabi Muhammad SAW di Bengkulu dan Sumbar melalui tradisi...",
+            options: ["Grebeg / Sekaten", "Tabot atau Asyura (10 Muharram)", "Vratyastoma Ksatria", "Mata uang Dirham"], correct: 1,
+            txt: "Teori Persia: ...Buktinya adalah tradisi Tabot atau Asyura (10 Muharram) di Bengkulu dan Sumbar yang memiliki kesamaan budaya berkabung atas wafatnya cucu Nabi Muhammad SAW di Persia."
+        },
+        {
+            q: "Bukti otentik Teori Arab (Islam datang langsung dari Makkah abad ke-7) adalah adanya penggunaan...",
+            options: ["Nisan Kambay", "Gelar Al-Malik pada raja-raja Pasai sebagai penanda khas Timur Tengah", "Arsitektur pagoda masjid", "Sistem istanasentris"], correct: 1,
+            txt: "Teori Arab: ...Buktinya adalah penggunaan gelar Al-Malik pada raja-raja Pasai sebagai penanda khas Timur Tengah (pembeda dari gelar India/Persia)."
+        },
+        {
+            q: "Teori Tiongkok dibuktikan dengan silsilah raja pertama Kesultanan Demak (Raden Patah) keturunan Tiongkok serta arsitektur masjid yang mirip...",
+            options: ["Kuil Yunani", "Pagoda", "Candi Prambanan", "Istana VOC"], correct: 1,
+            txt: "Teori Tiongkok: ...Sultan pertama Kesultanan Demak (Raden Patah) yang merupakan keturunan Tiongkok serta arsitektur masjid yang mirip pagoda."
+        },
+        {
+            q: "Pada masa Islam, konsep Dewa Raja diubah menjadi pandangan raja sebagai...",
+            options: ["Titisan inkarnasi Dewa", "Manusia biasa utusan di muka bumi yang mengemban amanah memimpin umat (Sultan/Khalifah)", "Pujangga pengarang Babad", "Pegawai birokrasi Belanda"], correct: 1,
+            txt: "Perubahan Konsep Kepemimpinan (Sultan): Mengubah konsep Dewa Raja. Pada masa Islam, raja tidak lagi disembah melainkan dipandang sebagai manusia biasa utusan di muka bumi yang mengemban amanah memimpin umat (Sultan atau Khalifah)."
+        },
+        {
+            q: "Kesultanan Samudera Pasai mendukung sistem ekonomi kuat dengan mengeluarkan mata uang resmi berupa...",
+            options: ["Rupiah", "Dirham (emas murni)", "Gulden", "Uang kertas"], correct: 1,
+            txt: "Perluasan dan Kejayaan Kesultanan Islam: Kesultanan Samudera Pasai: Letak strategis di Selat Malaka didukung sistem ekonomi kuat dengan mengeluarkan mata uang resmi berupa Dirham (emas murni)."
+        },
+        {
+            q: "Kerajaan yang bertindak sebagai penyebar Islam ke wilayah Jawa Barat melalui penerapan konsep ruang dan waktu ekspansi dari Jawa Tengah adalah...",
+            options: ["Banten", "Demak", "Mataram", "Cirebon"], correct: 1,
+            txt: "Kesultanan Demak: Kerajaan penyebar Islam ke wilayah Jawa Barat melalui penerapan konsep ruang dan waktu ekspansi dari Jawa Tengah."
+        },
+        {
+            q: "Tokoh agama (mubaligh) asal Sumatra (Minangkabau) yang berdakwah ke Sulawesi bertindak sebagai pendamai konflik...",
+            options: ["Demak dan Pajang", "Gowa dan Tallo", "Surakarta dan Yogyakarta", "Ternate dan Tidore"], correct: 1,
+            txt: "Tokoh Agama Penengah Konflik: Tokoh agama (mubaligh) asal Sumatra (Minangkabau) yang berdakwah ke Sulawesi dan menjadi pendamai konflik Gowa dan Tallo."
+        },
+        {
+            q: "Musuh barat terberat Kesultanan Aceh selain Portugis pada masa kolonialisme adalah...",
+            options: ["Inggris", "Belanda", "Spanyol", "Prancis"], correct: 1,
+            txt: "Kesultanan Aceh: Musuh barat terberat Kesultanan Aceh selain Portugis adalah kekuatan imperialis Eropa utama masa kolonialisme, yaltu Belanda."
+        },
+        {
+            q: "Kota pelabuhan Makassar (Maluku) berfungsi strategis sebagai gerbang masuk menuju pulau...",
+            options: ["Emas", "Rempah", "Sutra", "Padi"], correct: 1,
+            txt: "Jalur Transit Perdagangan: Kota pelabuhan Makassar (Maluku) terletak di antara Malaka dan Maluku, berfungsi sebagai gerbang masuk pulau rempah."
+        },
+        {
+            q: "Pecahnya Kerajaan Mataram Islam dipicu oleh konflik internal perebutan kekuasaan yang dimanfaatkan VOC lewat taktik...",
+            options: ["Benteng stelsel", "Devide et impera (adu domba)", "Etis liberal", "Kulturstelsel"], correct: 1,
+            txt: "Pecahnya Kerajaan Mataram Islam: Disebabkan oleh konflik internal (perebutan takhta kekuasaan) yang dimanfaatkan dan diperparah oleh taktik adu domba (devide et impera) VOC."
+        },
+        {
+            q: "Perjanjian tahun 1755 yang membagi Kerajaan Mataram Islam menjadi Kasunan Surakarta dan Kesultanan Yogyakarta bernama...",
+            options: ["Perjanjian Bongaya", "Perjanjian Giyanti", "Perjanjian Salatiga", "Perjanjian Batavia"], correct: 1,
+            txt: "Diatur melalui Perjanjian Giyanti (1755) yang membagi Mataram menjadi Kasunan Surakarta dan Kesultanan Yogyakarta."
+        },
+        {
+            q: "Wujud peninggalan kebudayaan Islam fisik seperti bangunan Masjid Agung, ukiran seni kaligrafi, dan dokumen naskah kuno dikategorikan sebagai...",
+            options: ["Peninggalan Tak Benda (Intangible)", "Peninggalan Benda (Tangible)", "Peninggalan Lisan", "Peninggalan Mitos"], correct: 1,
+            txt: "Warisan Peninggalan Islam: Peninggalan Benda (Tangible): Wujud fisik seperti bangunan Masjid Agung, ukiran seni kaligrafi, dan dokumen naskah kuno."
+        },
+        {
+            q: "Adat tradisi lisan, upacara keagamaan, perayaan Grebeg/Sekaten, atau sistem kepercayaan tradisi termasuk ke dalam kategori...",
+            options: ["Peninggalan Benda (Tangible)", "Peninggalan Tak Benda (Intangible)", "Peninggalan Arkeologis fisik", "Peninggalan Historiografi Kolonial"], correct: 1,
+            txt: "Peninggalan Tak Benda (Intangible): Adat tradisi lisan, upacara keagamaan, perayaan Grebeg/Sekaten, atau sistem kepercayaan tradisi."
+        }
+    ];
+
+    let currentIdx = 0;
+    let currentScore = 0;
+
+    const questText = document.getElementById("quest-text");
+    const boxOptions = document.getElementById("box-options");
+    const boxAlert = document.getElementById("box-alert");
+    const btnNext = document.getElementById("btn-next");
+    const labelQuest = document.getElementById("label-quest");
+    const barStatus = document.getElementById("bar-status");
+    const labelScore = document.getElementById("label-score");
+    const quizUi = document.getElementById("quiz-ui");
+    const scoreUi = document.getElementById("score-ui");
+    const totalScore = document.getElementById("total-score");
+    const msgEval = document.getElementById("msg-eval");
+
+    function startQuiz() {
+        currentIdx = 0;
+        currentScore = 0;
+        quizUi.style.display = "block";
+        scoreUi.style.display = "none";
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        boxAlert.style.display = "none";
+        btnNext.style.display = "none";
+        boxOptions.innerHTML = "";
+
+        labelQuest.innerText = `Soal ${currentIdx + 1}/${database.length}`;
+        barStatus.style.width = `${(currentIdx / database.length) * 100}%`;
+        labelScore.innerText = `Skor: ${currentScore}`;
+
+        const activeData = database[currentIdx];
+        questText.innerText = `${currentIdx + 1}. ${activeData.q}`;
+
+        activeData.options.forEach((opt, index) => {
+            const button = document.createElement("button");
+            button.classList.add("opt-btn");
+            button.innerText = opt;
+            button.onclick = () => evaluateChoice(index);
+            boxOptions.appendChild(button);
+        });
+    }
+
+    function evaluateChoice(selected) {
+        const activeData = database[currentIdx];
+        const buttons = boxOptions.querySelectorAll(".opt-btn");
+
+        buttons.forEach(b => b.disabled = true);
+
+        if (selected === activeData.correct) {
+            currentScore++;
+            buttons[selected].classList.add("correct-ans");
+            boxAlert.innerText = `🎉 BENAR! \nCatatan Buku Ujian: ${activeData.txt}`;
+            boxAlert.className = "alert-box correct-ui";
+        } else {
+            buttons[selected].classList.add("wrong-ans");
+            buttons[activeData.correct].classList.add("correct-ans");
+            boxAlert.innerText = `❌ KURANG TEPAT! \nJawaban Benar: ${activeData.options[activeData.correct]} \n\nSumber Dokumen: ${activeData.txt}`;
+            boxAlert.className = "alert-box wrong-ui";
+        }
+
+        labelScore.innerText = `Skor: ${currentScore}`;
+        boxAlert.style.display = "block";
+        btnNext.style.display = "block";
+    }
+
+    function moveNext() {
+        currentIdx++;
+        if (currentIdx < database.length) {
+            renderQuestion();
+        } else {
+            displayFinalScore();
+        }
+    }
+
+    function displayFinalScore() {
+        barStatus.style.width = "100%";
+        quizUi.style.display = "none";
+        scoreUi.style.display = "block";
+
+        let totalValue = Math.round((currentScore / database.length) * 100);
+        totalScore.innerText = `${totalValue} Poin`;
+
+        if (totalValue === 100) {
+            msgEval.innerText = "Sempurna! Kamu melibas total 50 variasi soal pindaian tanpa salah satu pun! Nilai A+ sudah terkunci untuk ujianmu besok! 🥇";
+        } else if (totalValue >= 80) {
+            msgEval.innerText = "Luar biasa hebat! Kamu berhasil mempertahankan konsentrasi tinggi melewati 50 pertanyaan marathon. Kamu sudah sangat siap menghadapi ujian! ✨";
+        } else if (totalValue >= 60) {
+            msgEval.innerText = "Hasil Cukup Baik. Kamu menguasai sebagian besar materi, namun ada beberapa detail kecil yang terlewat. Silakan ulas kembali materi yang salah!";
+        } else {
+            msgEval.innerText = "Kamu butuh membaca kembali lembar rangkuman fotomu dengan lebih teliti. Ayo coba lagi ujian marathon ini untuk mengasah ingatanmu! 💪";
+        }
+    }
+
+    function restartQuiz() {
+        startQuiz();
+    }
+
+    // Eksekusi otomatis saat pertama kali dibuka
+    startQuiz();
+</script>
+
+</body>
+</html>
